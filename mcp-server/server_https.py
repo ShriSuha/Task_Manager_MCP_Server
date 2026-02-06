@@ -39,7 +39,7 @@ async def lifespan(_app):
     load_tasks()
     port = int(os.environ.get("PORT", "8000"))
     print(f"Task Tracker MCP (Streamable HTTP) listening on 0.0.0.0:{port}")
-    print('Cursor MCP config: "url": "https://<your-app-url>/mcp"')
+    print('Cursor MCP config: "url": "https://taskmanagermcpserver-production.up.railway.app/mcp"')
     async with manager.run():
         yield
 
