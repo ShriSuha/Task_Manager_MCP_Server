@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "2": {
+      "id": 2,
+      "title": "Give an MCP demo today",
+      "description": "",
+      "status": "todo"
+    },
+    "3": {
+      "id": 3,
+      "title": "complete annotation",
+      "description": "",
+      "status": "in_progress"
+    }
+  },
+  "next_id": 4
+}
