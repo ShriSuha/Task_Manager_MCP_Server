@@ -20,8 +20,17 @@ from server import app, load_tasks
 # Streamable HTTP: single endpoint handles both POST (send) and GET (optional SSE stream)
 manager = StreamableHTTPSessionManager(app, json_response=True)
 
+# Cursor and some clients don't send Accept: text/event-stream; the SDK rejects them.
+# Inject it so the server accepts the request. We use json_response=True so we never actually stream SSE.
+ACCEPT_BOTH = (b"accept", b"text/event-stream, application/json")
+
 
 async def mcp_asgi(scope, receive, send):
+    headers = list(scope.get("headers", []))
+    # Remove any existing accept header so our injection is the only one
+    headers = [(k, v) for k, v in headers if k.lower() != b"accept"]
+    headers.append(ACCEPT_BOTH)
+    scope = {**scope, "headers": headers}
     await manager.handle_request(scope, receive, send)
 
 
