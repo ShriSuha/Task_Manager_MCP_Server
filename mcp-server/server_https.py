@@ -17,8 +17,8 @@ from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 # Reuse the same app and logic as the stdio server
 from server import app, load_tasks
 
-# Streamable HTTP: single endpoint handles both POST (send) and GET (optional SSE stream)
-manager = StreamableHTTPSessionManager(app, json_response=True)
+# Streamable HTTP: single endpoint. Stateless = no session ID required (Cursor doesn't send it back).
+manager = StreamableHTTPSessionManager(app, json_response=True, stateless=True)
 
 # Cursor and some clients don't send Accept: text/event-stream; the SDK rejects them.
 # Inject it so the server accepts the request. We use json_response=True so we never actually stream SSE.
