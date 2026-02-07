@@ -11,6 +11,7 @@ import contextlib
 import os
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 
@@ -43,8 +44,22 @@ async def lifespan(_app):
     async with manager.run():
         yield
 
-
 fastapi_app = FastAPI(lifespan=lifespan)
+
+# Add CORS middleware to allow requests from Cursor
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, you might want to restrict this
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Health check endpoint
+@fastapi_app.get("/")
+async def health_check():
+    return {"status": "ok", "service": "task-tracker-mcp"}
+
 fastapi_app.mount("/mcp", mcp_asgi)
 
 
